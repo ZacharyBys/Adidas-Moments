@@ -14,13 +14,21 @@
         android:layout_centerHorizontal="true"
         />
 
-    <ImageView
-        android:id="@+id/imageView"
+    <Button
+        android:id="@+id/displaybutton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:text="Show"
         android:layout_above="@+id/photobutton"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="202dp" />
+        />
 
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="200dp"
+        android:layout_height="350dp"
+        android:layout_above="@+id/photobutton"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="100dp" />
 
 </RelativeLayout>
