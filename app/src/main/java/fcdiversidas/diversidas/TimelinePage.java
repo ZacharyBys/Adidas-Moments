@@ -19,8 +19,17 @@ import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.VideoView;
 
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
+
 import net.gotev.uploadservice.UploadService;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -28,6 +37,7 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.Exchanger;
 import java.util.concurrent.RunnableFuture;
 
 import io.socket.emitter.Emitter;
@@ -57,14 +67,18 @@ public class TimelinePage extends AppCompatActivity {
 
         webSocketHelper.socket.on("pins", onNewPin);
 
-
-
         Button videoButton = (Button) findViewById(R.id.videobutton);
         videoButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 dispatchTakeVideoIntent();
+
+                for(TimelinePin pin : pinArray){
+                    Log.d("pinid", pin.pinid);
+                }
             }
         });
+
+        receivePins();
 
     }
 
@@ -78,13 +92,13 @@ public class TimelinePage extends AppCompatActivity {
                 @Override
                 public void run() {
                     long timestamp = 0;
-                    int pinid = 0;
+                    String pinid = null;
                     String type = null;
                     JSONObject data = (JSONObject) args[0];
                     try {
                         timestamp = data.getLong("time");
-                        pinid = data.getInt("_id");
-                        type = data.getString("pintype");
+                        pinid = data.getString("_id");
+                        type = data.getString("type");
                     } catch (Exception e){
 
                     }
@@ -96,6 +110,7 @@ public class TimelinePage extends AppCompatActivity {
 
         }
     };
+
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -214,6 +229,44 @@ public class TimelinePage extends AppCompatActivity {
         lp.addRule(RelativeLayout.BELOW, lastImageID );
         lp.setMargins(75,position,0,0);
         rl.addView(iv, lp);
+    }
+
+    private void receivePins(){
+        //pinArray;
+        RequestQueue queue = Volley.newRequestQueue(this);
+        String url = "http://ec2-54-236-246-164.compute-1.amazonaws.com:3000/pins";
+        StringRequest request = new StringRequest(Request.Method.GET,url,new Response.Listener<String>() {
+            @Override
+            public void onResponse(String response) {
+                JSONArray array = new JSONArray();
+                try {
+                    array = new JSONArray(response);
+                } catch (Exception e){
+
+                }
+                Log.d("response", response);
+                for(int i =0;i<array.length();i++){
+                    try {
+                        long time = array.getJSONObject(i).getLong("time");
+                        String id = array.getJSONObject(i).getString("_id");
+                        String pintype = array.getJSONObject(i).getString("type");
+                        TimelinePin pin = new TimelinePin(time,id,pintype);
+                        pinArray.add(pin);
+                    } catch (Exception e){
+                        Log.d("errooooor", e.getMessage());
+                    }
+                }
+            }
+        }, new Response.ErrorListener(){
+            @Override
+            public void onErrorResponse(VolleyError error){
+
+            }
+
+
+        });
+        queue.add(request);
+        Log.d("request", "Request Sent");
     }
 
 }

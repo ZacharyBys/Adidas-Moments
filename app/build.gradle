@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
 
 android {
+
+    packagingOptions {
+        exclude 'META-INF/LICENSE'
+        exclude 'META-INF/NOTICE'
+        exclude 'META-INF/DEPENDENCIES'
+        exclude 'httpcore-4.4.4'
+        exclude 'httpmime-4.4.1'
+    }
+
     compileSdkVersion 25
     buildToolsVersion "25.0.2"
     defaultConfig {
@@ -41,6 +50,6 @@ dependencies {
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'
-    compile 'com.mashape.unirest:unirest-java:1.4.9'
+    compile 'com.android.volley:volley:1.1.0'
     testCompile 'junit:junit:4.12'
 }

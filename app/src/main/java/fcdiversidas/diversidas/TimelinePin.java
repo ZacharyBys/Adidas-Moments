@@ -6,10 +6,10 @@ package fcdiversidas.diversidas;
 
 public class TimelinePin {
     private long timestamp;
-    private int pinid;
+    public String pinid;
     private String type;
 
-    TimelinePin(long time, int id, String t){
+    TimelinePin(long time, String id, String t){
         timestamp = time;
         pinid = id;
         type = t;
