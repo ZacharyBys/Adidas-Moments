@@ -9,17 +9,17 @@
     <Button
         android:id="@+id/photobutton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Reaction"
+        android:layout_height="40dp"
+        android:text="Take Picture"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         />
 
     <Button
-        android:id="@+id/displaybutton"
+        android:id="@+id/videobutton"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Show"
+        android:layout_height="40dp"
+        android:text="Take video"
         android:layout_above="@+id/photobutton"
         android:layout_centerHorizontal="true"
         />
