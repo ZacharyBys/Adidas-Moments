@@ -2,6 +2,7 @@ package fcdiversidas.diversidas;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -15,8 +16,10 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.Toast;
 import android.widget.VideoView;
 
 import com.android.volley.Request;
@@ -41,6 +44,8 @@ import java.util.concurrent.Exchanger;
 import java.util.concurrent.RunnableFuture;
 
 import io.socket.emitter.Emitter;
+
+import static java.lang.System.out;
 
 public class TimelinePage extends AppCompatActivity {
 
@@ -72,9 +77,14 @@ public class TimelinePage extends AppCompatActivity {
             public void onClick(View v) {
                 dispatchTakeVideoIntent();
 
-                for(TimelinePin pin : pinArray){
-                    Log.d("pinid", pin.pinid);
+                for (TimelinePin pin : pinArray){
+                    Log.d("pin", Long.toString(pin.timestamp));
                 }
+
+                for (TimelinePin pin : pinArray) {
+                    addPinToTimeline(pin);
+                }
+
             }
         });
 
@@ -103,6 +113,9 @@ public class TimelinePage extends AppCompatActivity {
 
                     }
                     //append the pin
+                    TimelinePin newPin = new TimelinePin(timestamp, pinid, type);
+                    pinArray.add(newPin);
+                    addPinToTimeline(newPin);
                     Log.d("pininfo", Long.toString(timestamp));
 
                 }
@@ -159,7 +172,7 @@ public class TimelinePage extends AppCompatActivity {
     private void sendPic() {
         // Get the dimensions of the View
 
-        ImageView imageView = (ImageView)  findViewById(R.id.imageView);
+        ImageView imageView = (ImageView)  findViewById(R.id.timelineBase);
 
         int targetW = imageView.getWidth();
         int targetH = imageView.getHeight();
@@ -184,12 +197,12 @@ public class TimelinePage extends AppCompatActivity {
 
         //imageView.setImageBitmap(bitmap);
         if (lastImageID < 0) {
-            ImageView iv = (ImageView) findViewById(R.id.imageView);
+            ImageView iv = (ImageView) findViewById(R.id.timelineBase);
             iv.setImageBitmap(bitmap);
-            lastImageID = R.id.imageView;
+            lastImageID = R.id.timelineBase;
             return;
         }
-        addImageToTimeline(topMarge, bitmap);
+        //addImageToTimeline(topMarge, bitmap);
         topMarge += 150;
     }
 
@@ -231,6 +244,39 @@ public class TimelinePage extends AppCompatActivity {
         rl.addView(iv, lp);
     }
 
+    private void addPinToTimeline(final TimelinePin pin){
+        final Context cont = this;
+        final String pinID = pin.pinid;
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                ImageButton ib = new ImageButton(cont);
+                RelativeLayout rl = (RelativeLayout) findViewById(R.id.timeline);
+                RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+                lp.addRule(RelativeLayout.BELOW, R.id.timelineBase);
+                Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(),R.drawable.map_pin,5,15);
+               // Bitmap newBit = Bitmap.createScaledBitmap(
+                 //       icon, 150, 50, false);
+
+                ib.setImageBitmap(icon);
+                double percentage = ((int) pin.timestamp)/95.;
+                double position = ((rl.getHeight())* percentage)-15;
+                lp.setMargins(110,(int) position,0,0);
+                rl.addView(ib, lp);
+                
+                ib.setOnClickListener(new Button.OnClickListener() {
+                    public void onClick(View v) {
+                        Toast toast = Toast.makeText(cont, pinID, Toast.LENGTH_SHORT);
+                        toast.show();
+                    }
+                });
+            }
+        });
+    }
+
     private void receivePins(){
         //pinArray;
         RequestQueue queue = Volley.newRequestQueue(this);
@@ -268,5 +314,41 @@ public class TimelinePage extends AppCompatActivity {
         queue.add(request);
         Log.d("request", "Request Sent");
     }
+    public static int calculateInSampleSize(
+            BitmapFactory.Options options, int reqWidth, int reqHeight) {
+        // Raw height and width of image
+        final int height = options.outHeight;
+        final int width = options.outWidth;
+        int inSampleSize = 1;
 
+        if (height > reqHeight || width > reqWidth) {
+
+            final int halfHeight = height / 2;
+            final int halfWidth = width / 2;
+
+            // Calculate the largest inSampleSize value that is a power of 2 and keeps both
+            // height and width larger than the requested height and width.
+            while ((halfHeight / inSampleSize) >= reqHeight
+                    && (halfWidth / inSampleSize) >= reqWidth) {
+                inSampleSize *= 2;
+            }
+        }
+
+        return inSampleSize;
+    }
+    public static Bitmap decodeSampledBitmapFromResource(Resources res, int resId,
+                                                         int reqWidth, int reqHeight) {
+
+        // First decode with inJustDecodeBounds=true to check dimensions
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(res, resId, options);
+
+        // Calculate inSampleSize
+        options.inSampleSize = calculateInSampleSize(options, reqWidth, reqHeight);
+
+        // Decode bitmap with inSampleSize set
+        options.inJustDecodeBounds = false;
+        return BitmapFactory.decodeResource(res, resId, options);
+    }
 }

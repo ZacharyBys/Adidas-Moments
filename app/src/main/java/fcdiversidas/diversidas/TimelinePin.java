@@ -5,7 +5,7 @@ package fcdiversidas.diversidas;
  */
 
 public class TimelinePin {
-    private long timestamp;
+    public long timestamp;
     public String pinid;
     private String type;
 

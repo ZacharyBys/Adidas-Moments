@@ -25,10 +25,21 @@
         />
 
     <ImageView
-        android:id="@+id/imageView"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:id="@+id/timelineBar"
+        android:layout_width="10dp"
+        android:layout_height="540dp"
+        android:background="#000000"
         android:layout_marginBottom="0dp"
-        android:layout_centerHorizontal="true" />
+        android:layout_marginTop="15dp"
+        android:layout_marginLeft="20dp"
+         />
+
+    <ImageView
+        android:id="@+id/timelineBase"
+        android:layout_width="50dp"
+        android:layout_height="15dp"
+        android:layout_marginBottom="0dp"
+        android:layout_marginLeft="20dp"
+         />
 
 </RelativeLayout>

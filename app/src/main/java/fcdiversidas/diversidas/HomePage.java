@@ -33,6 +33,9 @@ public class HomePage extends AppCompatActivity {
             }
         });
 
+        enterButton.setTypeface(openSansSemiBold);
+        enterButton.setText("Enter");
+
         TextView mainslogan = (TextView) findViewById(R.id.mainslogan);
         mainslogan.setTypeface(openSansSemiBold);
         TextView subslogan = (TextView) findViewById(R.id.subslogan);
