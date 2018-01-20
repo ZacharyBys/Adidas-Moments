@@ -6,6 +6,7 @@ import android.util.Log;
 
 import net.gotev.uploadservice.BinaryUploadRequest;
 import net.gotev.uploadservice.MultipartUploadRequest;
+import net.gotev.uploadservice.UploadNotificationConfig;
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
@@ -30,6 +31,19 @@ public class Initializer extends Application {
             String uploadId =
                     new MultipartUploadRequest(context, "http://ec2-54-236-246-164.compute-1.amazonaws.com:3000/test")
                             .addFileToUpload(filePath, "filename")
+                            .setMaxRetries(2)
+                            .startUpload();
+        } catch (Exception exc) {
+            Log.e("upload",exc.getMessage());
+        }
+    }
+
+    public void uploadBinaryUri(final Context context, String uri){
+        try {
+            // starting from 3.1+, you can also use content:// URI string instead of absolute file
+            String uploadId =
+                    new MultipartUploadRequest(context, "http://ec2-54-236-246-164.compute-1.amazonaws.com:3000/test")
+                            .addFileToUpload(uri, "filename")
                             .setMaxRetries(2)
                             .startUpload();
         } catch (Exception exc) {

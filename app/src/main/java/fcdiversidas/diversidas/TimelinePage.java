@@ -1,6 +1,8 @@
 package fcdiversidas.diversidas;
 
+import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.media.MediaMetadataRetriever;
@@ -10,6 +12,7 @@ import android.provider.MediaStore;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -18,21 +21,32 @@ import android.widget.VideoView;
 
 import net.gotev.uploadservice.UploadService;
 
+import org.json.JSONObject;
+
 import java.io.File;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.concurrent.RunnableFuture;
+
+import io.socket.emitter.Emitter;
 
 public class TimelinePage extends AppCompatActivity {
 
     Initializer initializer;
+    WebSocketHelper webSocketHelper;
+    ArrayList<TimelinePin> pinArray;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline_page);
 
         initializer = new Initializer();
+        webSocketHelper = new WebSocketHelper();
+        pinArray = new ArrayList<TimelinePin>();
 
         Button reactionButton = (Button) findViewById(R.id.photobutton);
         reactionButton.setOnClickListener(new Button.OnClickListener() {
@@ -40,6 +54,10 @@ public class TimelinePage extends AppCompatActivity {
                 dispatchTakePictureIntent();
             }
         });
+
+        webSocketHelper.socket.on("pins", onNewPin);
+
+
 
         Button videoButton = (Button) findViewById(R.id.videobutton);
         videoButton.setOnClickListener(new Button.OnClickListener() {
@@ -52,7 +70,32 @@ public class TimelinePage extends AppCompatActivity {
 
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQUEST_VIDEO_CAPTURE = 2;
+    private Emitter.Listener onNewPin = new Emitter.Listener(){
 
+        @Override
+        public void call(final Object... args) {
+            runOnUiThread(new Runnable() {
+                @Override
+                public void run() {
+                    long timestamp = 0;
+                    int pinid = 0;
+                    String type = null;
+                    JSONObject data = (JSONObject) args[0];
+                    try {
+                        timestamp = data.getLong("time");
+                        pinid = data.getInt("_id");
+                        type = data.getString("pintype");
+                    } catch (Exception e){
+
+                    }
+                    //append the pin
+                    Log.d("pininfo", Long.toString(timestamp));
+
+                }
+            });
+
+        }
+    };
     private void dispatchTakePictureIntent() {
         Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
         // Ensure that there's a camera activity to handle the intent
@@ -91,13 +134,8 @@ public class TimelinePage extends AppCompatActivity {
 
         if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
             Uri videoUri = intent.getData();
-            String videoPath = videoUri.getPath();
-            String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-            String videoName = "MP4_" + timeStamp + "_";
 
-            //ArrayList<Bitmap> frames = createGIF(videoUri);
-
-            sendVideo(videoPath, videoName);
+            sendVideo(videoUri.toString());
         }
 
         super.onActivityResult(requestCode, resultCode, intent);
@@ -140,23 +178,8 @@ public class TimelinePage extends AppCompatActivity {
         topMarge += 150;
     }
 
-    private ArrayList<Bitmap> createGIF(Uri videoUri){
-        File myVideo = new File(videoUri.getPath());
-        MediaMetadataRetriever mmRetriever = new MediaMetadataRetriever();
-        mmRetriever.setDataSource(myVideo.getAbsolutePath());
-
-        // Array list to hold your frames
-        ArrayList<Bitmap> frames = new ArrayList<Bitmap>();
-
-        // Some kind of iteration to retrieve the frames and add it to Array list
-        Bitmap bitmap = mmRetriever.getFrameAtTime(10000);
-        frames.add(bitmap);
-
-        return frames;
-    }
-
-    private void sendVideo(String path, String name){
-        initializer.uploadBinary(this,path,name);
+    private void sendVideo(String uri){
+        initializer.uploadBinaryUri(this,uri);
     }
 
     String mCurrentPhotoPath;
