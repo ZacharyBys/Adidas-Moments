@@ -3,7 +3,8 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="fill_parent"
-    android:layout_height="fill_parent">
+    android:layout_height="fill_parent"
+    android:id="@+id/timeline">
 
     <Button
         android:id="@+id/photobutton"
@@ -25,10 +26,9 @@
 
     <ImageView
         android:id="@+id/imageView"
-        android:layout_width="200dp"
-        android:layout_height="350dp"
-        android:layout_above="@+id/photobutton"
-        android:layout_centerHorizontal="true"
-        android:layout_marginBottom="100dp" />
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="0dp"
+        android:layout_centerHorizontal="true" />
 
 </RelativeLayout>

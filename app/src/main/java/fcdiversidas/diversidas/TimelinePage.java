@@ -12,6 +12,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 
 import net.gotev.uploadservice.UploadService;
 
@@ -95,11 +96,21 @@ public class TimelinePage extends AppCompatActivity {
 
         initializer.uploadBinary(this,mCurrentPhotoPath,imageFileName);
 
-        imageView.setImageBitmap(bitmap);
+        //imageView.setImageBitmap(bitmap);
+        if (lastImageID < 0) {
+            ImageView iv = (ImageView) findViewById(R.id.imageView);
+            iv.setImageBitmap(bitmap);
+            lastImageID = R.id.imageView;
+            return;
+        }
+        addImageToTimeline(topMarge, bitmap);
+        topMarge += 50;
     }
 
     String mCurrentPhotoPath;
     String imageFileName;
+    int lastImageID = -1;
+    int topMarge = 0;
 
     private File createImageFile() throws IOException {
         // Create an image file name
@@ -115,5 +126,17 @@ public class TimelinePage extends AppCompatActivity {
         // Save a file: path for use with ACTION_VIEW intents
         mCurrentPhotoPath = image.getAbsolutePath();
         return image;
+    }
+
+    private void addImageToTimeline(int position, Bitmap image){
+        ImageView iv = new ImageView(this);
+        iv.setImageBitmap(image);
+        RelativeLayout rl = (RelativeLayout) findViewById(R.id.timeline);
+        RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
+                RelativeLayout.LayoutParams.WRAP_CONTENT,
+                RelativeLayout.LayoutParams.WRAP_CONTENT);
+        lp.addRule(RelativeLayout.BELOW, lastImageID );
+        lp.setMargins(0,position,0,0);
+        rl.addView(iv, lp);
     }
 }

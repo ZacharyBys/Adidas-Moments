@@ -5,6 +5,7 @@ import android.content.Context;
 import android.util.Log;
 
 import net.gotev.uploadservice.BinaryUploadRequest;
+import net.gotev.uploadservice.MultipartUploadRequest;
 import net.gotev.uploadservice.UploadService;
 import net.gotev.uploadservice.okhttp.OkHttpStack;
 
@@ -27,9 +28,8 @@ public class Initializer extends Application {
         try {
             // starting from 3.1+, you can also use content:// URI string instead of absolute file
             String uploadId =
-                    new BinaryUploadRequest(context, "http://ec2-54-236-246-164.compute-1.amazonaws.com:3000/test")
-                            .setFileToUpload(filePath)
-                            .addHeader(fileName, new File(filePath).getName())
+                    new MultipartUploadRequest(context, "http://ec2-54-236-246-164.compute-1.amazonaws.com:3000/test")
+                            .addFileToUpload(filePath, "filename")
                             .setMaxRetries(2)
                             .startUpload();
         } catch (Exception exc) {
