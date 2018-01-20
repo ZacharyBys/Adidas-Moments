@@ -40,13 +40,13 @@ dependencies {
         exclude group: 'com.android.support', module: 'support-annotations'
     })
 
-    compile ('io.socket:socket.io-client:1.0.0') {
+    compile('io.socket:socket.io-client:1.0.0') {
         // excluding org.json which is provided by Android
         exclude group: 'org.json', module: 'json'
     }
-    compile 'net.gotev:uploadservice:3.4.1'
-    compile "net.gotev:uploadservice-okhttp:3.4.1"
 
+    compile 'net.gotev:uploadservice:3.4.1'
+    compile 'net.gotev:uploadservice-okhttp:3.4.1'
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile 'com.android.support.constraint:constraint-layout:1.0.2'
     compile 'com.android.support:design:25.3.1'

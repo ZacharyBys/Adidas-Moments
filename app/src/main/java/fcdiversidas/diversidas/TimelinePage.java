@@ -6,6 +6,7 @@ import android.content.res.Resources;
 import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
@@ -265,12 +266,15 @@ public class TimelinePage extends AppCompatActivity {
                 double percentage = ((int) pin.timestamp)/95.;
                 double position = ((rl.getHeight())* percentage)-15;
                 lp.setMargins(110,(int) position,0,0);
+                ib.setBackgroundColor(Color.TRANSPARENT);
                 rl.addView(ib, lp);
+
                 
                 ib.setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
-                        Toast toast = Toast.makeText(cont, pinID, Toast.LENGTH_SHORT);
-                        toast.show();
+                        Intent intent = new Intent(TimelinePage.this, PinMoment.class);
+                        intent.putExtra("pinID", pinID);
+                        startActivity(intent);
                     }
                 });
             }

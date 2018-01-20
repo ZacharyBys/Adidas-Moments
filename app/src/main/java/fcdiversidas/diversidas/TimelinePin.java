@@ -8,6 +8,7 @@ public class TimelinePin {
     public long timestamp;
     public String pinid;
     private String type;
+    public int numberOfReactions;
 
     TimelinePin(long time, String id, String t){
         timestamp = time;
