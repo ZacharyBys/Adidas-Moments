@@ -15,6 +15,25 @@
         android:layout_centerHorizontal="true"
         />
 
+    <Button
+        android:layout_width="320dp"
+        android:layout_height="350dp"
+        android:id="@+id/screenbutton"
+        android:layout_marginTop="130dp"
+        android:background="@android:color/transparent"
+        android:layout_centerHorizontal="true"
+        />
+
+
+    <VideoView
+        android:layout_width="320dp"
+        android:layout_height="350dp"
+        android:id="@+id/videoview"
+        android:visibility="gone"
+        android:layout_marginTop="130dp"
+        android:layout_centerHorizontal="true"
+        />
+
     <ImageView
         android:layout_width="20dp"
         android:layout_height="40dp"

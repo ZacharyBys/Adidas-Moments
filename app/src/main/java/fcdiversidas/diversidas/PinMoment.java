@@ -21,6 +21,7 @@ import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.VideoView;
 
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -77,16 +78,6 @@ public class PinMoment extends AppCompatActivity {
             }
         });
 
-        ImageView imgView = (ImageView) findViewById(R.id.imageview);
-
-        imgView.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                setNextImage();
-                resetLike();
-            }
-        });
-
         ImageView backbutton = (ImageView) findViewById(R.id.backbutton);
         backbutton.bringToFront();
         backbutton.setOnClickListener(new View.OnClickListener() {
@@ -94,6 +85,15 @@ public class PinMoment extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(PinMoment.this, TimelinePage.class);
                 startActivity(intent);
+            }
+        });
+
+        Button but = (Button) findViewById(R.id.screenbutton);
+        but.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                setNextImage();
+                resetLike();
             }
         });
 
@@ -239,13 +239,28 @@ public class PinMoment extends AppCompatActivity {
     }
 
     private void setNextImage() {
+        VideoView videoview = (VideoView) findViewById(R.id.videoview);
         if (pictureMap.size() == 0){
+            return;
+        }
+        if (currentSlide == pictureMap.size()){
+            videoview.setVisibility(View.VISIBLE);
+            ImageView view = (ImageView) findViewById(R.id.imageview);
+            view.setVisibility(View.INVISIBLE);
+            String path = "android.resource://" + getPackageName() + "/" + R.raw.zachvideo;
+            videoview.setVideoURI(Uri.parse(path));
+            videoview.start();
+            currentSlide=0;
             return;
         }
         ImageView view = (ImageView) findViewById(R.id.imageview);
         view.setImageBitmap(pictureMap.get(currentSlide));
+        view.setVisibility(View.VISIBLE);
+        videoview.setVisibility(View.GONE);
+        videoview.stopPlayback();
+
         currentSlide++;
-        if (currentSlide >= pictureMap.size()){
+        if (currentSlide > pictureMap.size()){
             currentSlide = 0;
         }
     }
@@ -269,28 +284,23 @@ public class PinMoment extends AppCompatActivity {
                     try {
                         String urls = "http://ec2-54-236-246-164.compute-1.amazonaws.com:3000/"+ array.getJSONObject(i).getString("mediaPath");
                        //ADD TO SLIDE SHOW
-                        urllist.add(urls);
-
+                        //urllist.add(urls);
+                        Glide.
+                                with(cont).
+                                asBitmap().
+                                load(urls).
+                                into(new CustomTarget<Bitmap>(100,100)  {
+                                    @Override
+                                    public void onResourceReady (Bitmap res, Transition< ? super Bitmap > transition) {
+                                        pictureMap.add(res);
+                                        setNextImage();
+                                    }
+                                });
                     } catch (Exception e){
                         Log.d("errooooor", e.getMessage());
                     }
                 }
                 Log.d("urllist",urllist.toString());
-                for (String url : urllist){
-                     Glide.
-                            with(cont).
-                            asBitmap().
-                            load(url).
-                            into(new CustomTarget<Bitmap>(100,100)  {
-                                @Override
-                                public void onResourceReady (Bitmap res, Transition< ? super Bitmap > transition) {
-                                    pictureMap.add(res);
-                                    setNextImage();
-                                }
-                            });
-
-
-                }
 
             }
         }, new Response.ErrorListener(){
