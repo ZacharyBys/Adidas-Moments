@@ -197,12 +197,12 @@ public class TimelinePage extends AppCompatActivity {
         initializer.uploadBinary(this,mCurrentPhotoPath,imageFileName);
 
         //imageView.setImageBitmap(bitmap);
-        if (lastImageID < 0) {
+        /*if (lastImageID < 0) {
             ImageView iv = (ImageView) findViewById(R.id.timelineBase);
             iv.setImageBitmap(bitmap);
             lastImageID = R.id.timelineBase;
             return;
-        }
+        }*/
         //addImageToTimeline(topMarge, bitmap);
         topMarge += 150;
     }
@@ -258,13 +258,13 @@ public class TimelinePage extends AppCompatActivity {
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
 
                 lp.addRule(RelativeLayout.BELOW, R.id.timelineBase);
-                Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(),R.drawable.map_pin,5,15);
+                Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(),R.drawable.first_goal,5,30);
                // Bitmap newBit = Bitmap.createScaledBitmap(
                  //       icon, 150, 50, false);
-
+                ImageView imgV = (ImageView) findViewById(R.id.topbackground);
                 ib.setImageBitmap(icon);
                 double percentage = ((int) pin.timestamp)/95.;
-                double position = ((rl.getHeight())* percentage)-15;
+                double position = ((rl.getHeight()-imgV.getHeight())* percentage)-15;
                 lp.setMargins(110,(int) position,0,0);
                 ib.setBackgroundColor(Color.TRANSPARENT);
                 rl.addView(ib, lp);

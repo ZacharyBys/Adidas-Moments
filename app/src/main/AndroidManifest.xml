@@ -35,7 +35,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".PinMoment"></activity>
+        <activity android:name=".PinMoment"
+                  android:noHistory="true">
+        </activity>
     </application>
 
 </manifest>

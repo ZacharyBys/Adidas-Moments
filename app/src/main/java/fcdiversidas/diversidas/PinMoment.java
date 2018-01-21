@@ -68,6 +68,14 @@ public class PinMoment extends AppCompatActivity {
         setNextImage();
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+
+        // Otherwise defer to system default behavior.
+        super.onBackPressed();
+    }
+
     private void setNextImage() {
         if (pictureMap.size() == 0){
             return;
@@ -100,11 +108,12 @@ public class PinMoment extends AppCompatActivity {
                         String urls = "http://ec2-54-236-246-164.compute-1.amazonaws.com:3000/"+ array.getJSONObject(i).getString("mediaPath");
                        //ADD TO SLIDE SHOW
                         urllist.add(urls);
+
                     } catch (Exception e){
                         Log.d("errooooor", e.getMessage());
                     }
                 }
-
+                Log.d("urllist",urllist.toString());
                 for (String url : urllist){
                      Glide.
                             with(cont).
@@ -114,13 +123,13 @@ public class PinMoment extends AppCompatActivity {
                                 @Override
                                 public void onResourceReady (Bitmap res, Transition< ? super Bitmap > transition) {
                                     pictureMap.add(res);
+                                    setNextImage();
                                 }
                             });
 
 
                 }
 
-                setNextImage();
             }
         }, new Response.ErrorListener(){
             @Override
