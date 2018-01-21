@@ -7,6 +7,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.media.MediaMetadataRetriever;
 import android.net.Uri;
 import android.os.Environment;
@@ -20,6 +21,7 @@ import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 import android.widget.VideoView;
 
@@ -35,6 +37,7 @@ import net.gotev.uploadservice.UploadService;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.io.File;
 import java.io.IOException;
@@ -53,6 +56,9 @@ public class TimelinePage extends AppCompatActivity {
     Initializer initializer;
     WebSocketHelper webSocketHelper;
     ArrayList<TimelinePin> pinArray;
+    public Typeface texgyBold;
+
+
 
 
     @Override
@@ -60,41 +66,22 @@ public class TimelinePage extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_timeline_page);
 
+        texgyBold = Typeface.createFromAsset(getAssets(),
+                "texgyreadventor-bold.otf");
+
         initializer = new Initializer();
         webSocketHelper = new WebSocketHelper();
         pinArray = new ArrayList<TimelinePin>();
 
-        Button reactionButton = (Button) findViewById(R.id.photobutton);
-        reactionButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                dispatchTakePictureIntent();
-            }
-        });
-
         webSocketHelper.socket.on("pins", onNewPin);
-
-        Button videoButton = (Button) findViewById(R.id.videobutton);
-        videoButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                dispatchTakeVideoIntent();
-
-                for (TimelinePin pin : pinArray){
-                    Log.d("pin", Long.toString(pin.timestamp));
-                }
-
-                for (TimelinePin pin : pinArray) {
-                    addPinToTimeline(pin);
-                }
-
-            }
-        });
 
         receivePins();
 
+        TextView matchinfo = (TextView) findViewById(R.id.matchinfo);
+        matchinfo.bringToFront();
+        matchinfo.setTypeface(texgyBold);
     }
 
-    static final int REQUEST_TAKE_PHOTO = 1;
-    static final int REQUEST_VIDEO_CAPTURE = 2;
     private Emitter.Listener onNewPin = new Emitter.Listener(){
 
         @Override
@@ -105,16 +92,18 @@ public class TimelinePage extends AppCompatActivity {
                     long timestamp = 0;
                     String pinid = null;
                     String type = null;
+                    int size = 0;
                     JSONObject data = (JSONObject) args[0];
                     try {
                         timestamp = data.getLong("time");
                         pinid = data.getString("_id");
                         type = data.getString("type");
+                        size = data.getInt("size");
                     } catch (Exception e){
 
                     }
                     //append the pin
-                    TimelinePin newPin = new TimelinePin(timestamp, pinid, type);
+                    TimelinePin newPin = new TimelinePin(timestamp, pinid, type, size);
                     pinArray.add(newPin);
                     addPinToTimeline(newPin);
                     Log.d("pininfo", Long.toString(timestamp));
@@ -125,114 +114,7 @@ public class TimelinePage extends AppCompatActivity {
         }
     };
 
-    private void dispatchTakePictureIntent() {
-        Intent takePictureIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        // Ensure that there's a camera activity to handle the intent
-        if (takePictureIntent.resolveActivity(getPackageManager()) != null) {
-            // Create the File where the photo should go
-            File photoFile = null;
-            try {
-                photoFile = createImageFile();
-            } catch (IOException ex) {
-                // Error occurred while creating the File
-            }
-            // Continue only if the File was successfully created
-            if (photoFile != null) {
-                Uri photoURI = FileProvider.getUriForFile(this,
-                        "com.example.android.fileprovider",
-                        photoFile);
-                takePictureIntent.putExtra(MediaStore.EXTRA_OUTPUT, photoURI);
-                this.startActivityForResult(takePictureIntent, REQUEST_TAKE_PHOTO);
-            }
-        }
-    }
-
-    private void dispatchTakeVideoIntent() {
-        Intent takeVideoIntent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-        if (takeVideoIntent.resolveActivity(getPackageManager()) != null) {
-            startActivityForResult(takeVideoIntent, REQUEST_VIDEO_CAPTURE);
-        }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent intent) {
-        if(requestCode==REQUEST_TAKE_PHOTO && resultCode==RESULT_OK)
-        {
-            sendPic();
-        }
-
-        if (requestCode == REQUEST_VIDEO_CAPTURE && resultCode == RESULT_OK) {
-            Uri videoUri = intent.getData();
-
-            sendVideo(videoUri.toString());
-        }
-
-        super.onActivityResult(requestCode, resultCode, intent);
-    }
-
-    private void sendPic() {
-        // Get the dimensions of the View
-
-        ImageView imageView = (ImageView)  findViewById(R.id.timelineBase);
-
-        int targetW = imageView.getWidth();
-        int targetH = imageView.getHeight();
-
-        // Get the dimensions of the bitmap
-        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
-        bmOptions.inJustDecodeBounds = true;
-        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-        int photoW = bmOptions.outWidth;
-        int photoH = bmOptions.outHeight;
-
-        // Determine how much to scale down the image
-        int scaleFactor = Math.min(photoW/targetW, photoH/targetH);
-
-        // Decode the image file into a Bitmap sized to fill the View
-        bmOptions.inJustDecodeBounds = false;
-        bmOptions.inSampleSize = scaleFactor;
-
-        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
-
-        initializer.uploadBinary(this,mCurrentPhotoPath,imageFileName);
-
-        //imageView.setImageBitmap(bitmap);
-        /*if (lastImageID < 0) {
-            ImageView iv = (ImageView) findViewById(R.id.timelineBase);
-            iv.setImageBitmap(bitmap);
-            lastImageID = R.id.timelineBase;
-            return;
-        }*/
-        //addImageToTimeline(topMarge, bitmap);
-        topMarge += 150;
-    }
-
-    private void sendVideo(String uri){
-        initializer.uploadBinaryUri(this,uri);
-    }
-
-    String mCurrentPhotoPath;
-    String imageFileName;
-    int lastImageID = -1;
-    int topMarge = 0;
-
-    private File createImageFile() throws IOException {
-        // Create an image file name
-        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-        imageFileName = "JPEG_" + timeStamp + "_";
-        File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
-        File image = File.createTempFile(
-                imageFileName,  /* prefix */
-                ".jpg",         /* suffix */
-                storageDir      /* directory */
-        );
-
-        // Save a file: path for use with ACTION_VIEW intents
-        mCurrentPhotoPath = image.getAbsolutePath();
-        return image;
-    }
-
-    private void addImageToTimeline(int position, Bitmap image){
+   /* private void addImageToTimeline(int position, Bitmap image){
         ImageView iv = new ImageView(this);
         iv.setImageBitmap(image);
         RelativeLayout rl = (RelativeLayout) findViewById(R.id.timeline);
@@ -243,7 +125,7 @@ public class TimelinePage extends AppCompatActivity {
         lp.addRule(RelativeLayout.BELOW, lastImageID );
         lp.setMargins(75,position,0,0);
         rl.addView(iv, lp);
-    }
+    }*/
 
     private void addPinToTimeline(final TimelinePin pin){
         final Context cont = this;
@@ -258,8 +140,17 @@ public class TimelinePage extends AppCompatActivity {
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
 
                 lp.addRule(RelativeLayout.BELOW, R.id.timelineBase);
-                Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(),R.drawable.first_goal,5,30);
-               // Bitmap newBit = Bitmap.createScaledBitmap(
+                int width = 61;
+                int height = 30;
+
+                /*if (pin.pinSize > 3){
+                    width *= 1.1;
+                } else if (pin.pinSize > 7){
+                    width *= 1.2;
+                }*/
+
+                Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(),R.drawable.first_goal,width, height);
+               //Bitmap newBit = Bitmap.createScaledBitmap(
                  //       icon, 150, 50, false);
                 ImageView imgV = (ImageView) findViewById(R.id.topbackground);
                 ib.setImageBitmap(icon);
@@ -268,8 +159,18 @@ public class TimelinePage extends AppCompatActivity {
                 lp.setMargins(110,(int) position,0,0);
                 ib.setBackgroundColor(Color.TRANSPARENT);
                 rl.addView(ib, lp);
+                ib.bringToFront();
 
-                
+                TextView minute = new TextView(cont);
+                minute.setText(Long.toString(pin.timestamp));
+                minute.setTextColor(getResources().getColor(R.color.numbers));
+                RelativeLayout.LayoutParams newlp = new RelativeLayout.LayoutParams(
+                        RelativeLayout.LayoutParams.WRAP_CONTENT,
+                        RelativeLayout.LayoutParams.WRAP_CONTENT);
+                minute.setTypeface(texgyBold);
+                newlp.setMargins(215, (int) position+110 ,0,0 );
+                rl.addView(minute, newlp);
+
                 ib.setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
                         Intent intent = new Intent(TimelinePage.this, PinMoment.class);
@@ -300,11 +201,16 @@ public class TimelinePage extends AppCompatActivity {
                         long time = array.getJSONObject(i).getLong("time");
                         String id = array.getJSONObject(i).getString("_id");
                         String pintype = array.getJSONObject(i).getString("type");
-                        TimelinePin pin = new TimelinePin(time,id,pintype);
+                        int pinSize = array.getJSONObject(i).getInt("size");
+                        TimelinePin pin = new TimelinePin(time,id,pintype, pinSize);
                         pinArray.add(pin);
                     } catch (Exception e){
                         Log.d("errooooor", e.getMessage());
                     }
+                }
+
+                for (TimelinePin pin : pinArray) {
+                    addPinToTimeline(pin);
                 }
             }
         }, new Response.ErrorListener(){

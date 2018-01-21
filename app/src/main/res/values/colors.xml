@@ -4,5 +4,6 @@
     <color name="colorPrimaryDark">#000000</color>
     <color name="colorAccent">#FFFFFF</color>
     <color name="white">#FFFFFF</color>
-    <color name="red_accent">#FD3B2D</color>
+    <color name="numbers">#F0FD3B2D</color>
+    <color name="red_accent">#80FFFFFF</color>
 </resources>

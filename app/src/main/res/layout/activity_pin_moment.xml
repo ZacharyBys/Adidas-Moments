@@ -6,19 +6,29 @@
     android:layout_height="fill_parent"
     android:id="@+id/pinmoment">
 
-    <TextView
-        android:id="@+id/pintitle"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textColor="#000000"
-        android:textSize="20dp"
-        android:layout_centerHorizontal="true" />
-
     <ImageView
         android:layout_width="300dp"
         android:layout_height="400dp"
         android:id="@+id/imageview"
         android:layout_marginTop="50dp"
+        android:layout_centerHorizontal="true"
+        />
+
+    <Button
+        android:id="@+id/photobutton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Take Picture"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        />
+
+    <Button
+        android:id="@+id/videobutton"
+        android:layout_width="wrap_content"
+        android:layout_height="40dp"
+        android:text="Take video"
+        android:layout_above="@+id/photobutton"
         android:layout_centerHorizontal="true"
         />
 

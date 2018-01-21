@@ -25,11 +25,13 @@ public class Initializer extends Application {
         UploadService.HTTP_STACK = new OkHttpStack(); // a new client will be automatically created
     }
 
-    public void uploadBinary(final Context context, String filePath, String fileName) {
+    public void uploadBinary(final Context context, String filePath, String pinID) {
         try {
+            Log.d("PIMID",pinID);
             // starting from 3.1+, you can also use content:// URI string instead of absolute file
             String uploadId =
                     new MultipartUploadRequest(context, "http://ec2-54-236-246-164.compute-1.amazonaws.com:3000/test")
+                            .addHeader("pinId",pinID)
                             .addFileToUpload(filePath, "filename")
                             .setMaxRetries(2)
                             .startUpload();

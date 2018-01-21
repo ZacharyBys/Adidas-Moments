@@ -5,36 +5,31 @@
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
     android:id="@+id/timeline"
-    android:background="@drawable/bg_timelinelive">
-
-    <Button
-        android:id="@+id/photobutton"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="Take Picture"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        />
-
-    <Button
-        android:id="@+id/videobutton"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="Take video"
-        android:layout_above="@+id/photobutton"
-        android:layout_centerHorizontal="true"
-        />
+    android:background="@drawable/bg_timelinelive_min">
 
     <ImageView
         android:id="@+id/timelineBar"
         android:layout_width="10dp"
         android:layout_height="450dp"
-        android:background="#000000"
+        android:background="@drawable/timeline_pic"
         android:layout_marginBottom="0dp"
         android:layout_below="@+id/topbackground"
-        android:layout_marginTop="15dp"
+        android:layout_marginTop="17dp"
         android:layout_marginLeft="20dp"
          />
+
+    <TextView
+        android:id="@+id/matchinfo"
+        android:layout_height="60dp"
+        android:layout_width="200dp"
+        android:gravity="right"
+        android:textSize="20dp"
+        android:layout_alignParentRight="true"
+        android:layout_marginTop="10dp"
+        android:layout_marginRight="7dp"
+        android:text="FC Bayern Munchen  - SV Werder Bremen"
+        android:textColor="#000000"
+        />
 
     <ImageView
         android:id="@+id/timelineBase"
@@ -49,7 +44,6 @@
         android:layout_width="fill_parent"
         android:background="@color/red_accent"
         android:layout_height="75dp"
-        android:layout_marginBottom="0dp"
         />
 
 </RelativeLayout>

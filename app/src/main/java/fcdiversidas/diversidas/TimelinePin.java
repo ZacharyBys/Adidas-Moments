@@ -9,10 +9,12 @@ public class TimelinePin {
     public String pinid;
     private String type;
     public int numberOfReactions;
+    public int pinSize;
 
-    TimelinePin(long time, String id, String t){
+    TimelinePin(long time, String id, String t, int size){
         timestamp = time;
         pinid = id;
         type = t;
+        pinSize = size;
     }
 }
