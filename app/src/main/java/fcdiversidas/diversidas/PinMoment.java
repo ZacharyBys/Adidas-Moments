@@ -46,6 +46,7 @@ import static fcdiversidas.diversidas.TimelinePage.decodeSampledBitmapFromResour
 
 public class PinMoment extends AppCompatActivity {
     String pinID;
+    String mins;
     ArrayList<Bitmap> pictureMap;
     int currentSlide = 0;
     static final int REQUEST_TAKE_PHOTO = 1;
@@ -59,6 +60,8 @@ public class PinMoment extends AppCompatActivity {
         Intent intent = getIntent();
 
         pinID = intent.getStringExtra("pinID");
+        mins = intent.getStringExtra("time");
+
         pictureMap = new ArrayList<Bitmap>();
         initializer = new Initializer();
 
@@ -84,6 +87,16 @@ public class PinMoment extends AppCompatActivity {
             }
         });
 
+        ImageView backbutton = (ImageView) findViewById(R.id.backbutton);
+        backbutton.bringToFront();
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(PinMoment.this, TimelinePage.class);
+                startActivity(intent);
+            }
+        });
+
         ImageView view = (ImageView) findViewById(R.id.soccerball);
         Bitmap icon = decodeSampledBitmapFromResource(this.getResources(),R.drawable.ball,75, 75);
         view.setImageBitmap(icon);
@@ -94,6 +107,11 @@ public class PinMoment extends AppCompatActivity {
 
         TextView addreaction = (TextView) findViewById(R.id.addreaction);
         addreaction.setTypeface(opensemi);
+
+        TextView minute = (TextView) findViewById(R.id.minute);
+        minute.setText(mins + "'");
+        minute.setTypeface(opensemi);
+        minute.bringToFront();
 
         final Context cont = this;
 

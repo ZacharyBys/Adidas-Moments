@@ -7,7 +7,7 @@ package fcdiversidas.diversidas;
 public class TimelinePin {
     public long timestamp;
     public String pinid;
-    private String type;
+    public String type;
     public int numberOfReactions;
     public int pinSize;
 

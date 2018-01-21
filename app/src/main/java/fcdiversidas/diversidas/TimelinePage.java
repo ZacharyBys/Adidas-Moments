@@ -78,7 +78,8 @@ public class TimelinePage extends AppCompatActivity {
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(TimelinePage.this, MatchPage.class);
+                startActivity(intent);
             }
         });
 
@@ -159,15 +160,17 @@ public class TimelinePage extends AppCompatActivity {
                 } else if (pin.pinSize > 7){
                     width *= 1.2;
                 }*/
-
-                Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(),R.drawable.first_goal,width, height);
+                int id = R.drawable.first_goal;
+                if (!(pin.type == null) && pin.type.equals("goal")) id = R.drawable.first_goal;
+                else if (!(pin.type == null) && pin.type.equals("card")) id = R.drawable.cardpin;
+                Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(),id,width, height);
                //Bitmap newBit = Bitmap.createScaledBitmap(
                  //       icon, 150, 50, false);
                 ImageView imgV = (ImageView) findViewById(R.id.topbackground);
                 ib.setImageBitmap(icon);
                 double percentage = ((int) pin.timestamp)/95.;
                 double position = ((rl.getHeight()-imgV.getHeight())* percentage)-15;
-                lp.setMargins(110,(int) position,0,0);
+                lp.setMargins(110,(int) position + 120 ,0,0);
                 ib.setBackgroundColor(Color.TRANSPARENT);
                 rl.addView(ib, lp);
                 ib.bringToFront();
@@ -179,13 +182,14 @@ public class TimelinePage extends AppCompatActivity {
                         RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
                 minute.setTypeface(texgyBold);
-                newlp.setMargins(215, (int) position+110 ,0,0 );
+                newlp.setMargins(215, (int) position+230 ,0,0 );
                 rl.addView(minute, newlp);
 
                 ib.setOnClickListener(new Button.OnClickListener() {
                     public void onClick(View v) {
                         Intent intent = new Intent(TimelinePage.this, PinMoment.class);
                         intent.putExtra("pinID", pinID);
+                        intent.putExtra("time", Long.toString(pin.timestamp));
                         startActivity(intent);
                     }
                 });

@@ -28,7 +28,7 @@ public class HomePage extends AppCompatActivity {
         Button enterButton = (Button) findViewById(R.id.enter);
         enterButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
-                Intent intent = new Intent(HomePage.this, TimelinePage.class);
+                Intent intent = new Intent(HomePage.this, MatchPage.class);
                 startActivity(intent);
             }
         });

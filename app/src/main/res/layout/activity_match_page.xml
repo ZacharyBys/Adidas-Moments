@@ -33,5 +33,28 @@
         android:background="@drawable/back_icon"
         />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/topbackground"
+        android:layout_marginTop="50dp"
+        android:id="@+id/title1"
+        android:layout_marginLeft="30dp"
+        android:textColor="@color/white"
+        android:text="FC BAYERN - WERDER BREMEN"
+        android:textSize="20dp"
+        />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/title1"
+        android:id="@+id/subtitle1"
+        android:layout_marginTop="0dp"
+        android:layout_marginLeft="30dp"
+        android:textColor="@color/numbers"
+        android:text="CREATE MOMENTS"
+        android:textSize="20dp"
+        />
 
 </RelativeLayout>
