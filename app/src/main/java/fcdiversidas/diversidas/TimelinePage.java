@@ -73,6 +73,15 @@ public class TimelinePage extends AppCompatActivity {
         webSocketHelper = new WebSocketHelper();
         pinArray = new ArrayList<TimelinePin>();
 
+        ImageView backbutton = (ImageView) findViewById(R.id.backbutton);
+        backbutton.bringToFront();
+        backbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
+
         webSocketHelper.socket.on("pins", onNewPin);
 
         receivePins();
@@ -134,14 +143,16 @@ public class TimelinePage extends AppCompatActivity {
             @Override
             public void run() {
                 ImageButton ib = new ImageButton(cont);
+                ib.setMaxWidth(62);
+                ib.setMaxHeight(30);
                 RelativeLayout rl = (RelativeLayout) findViewById(R.id.timeline);
                 RelativeLayout.LayoutParams lp = new RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.WRAP_CONTENT,
                         RelativeLayout.LayoutParams.WRAP_CONTENT);
 
                 lp.addRule(RelativeLayout.BELOW, R.id.timelineBase);
-                int width = 61;
-                int height = 30;
+                int width = 90;
+                int height = 45;
 
                 /*if (pin.pinSize > 3){
                     width *= 1.1;
@@ -162,7 +173,7 @@ public class TimelinePage extends AppCompatActivity {
                 ib.bringToFront();
 
                 TextView minute = new TextView(cont);
-                minute.setText(Long.toString(pin.timestamp));
+                minute.setText(Long.toString(pin.timestamp) + "'");
                 minute.setTextColor(getResources().getColor(R.color.numbers));
                 RelativeLayout.LayoutParams newlp = new RelativeLayout.LayoutParams(
                         RelativeLayout.LayoutParams.WRAP_CONTENT,

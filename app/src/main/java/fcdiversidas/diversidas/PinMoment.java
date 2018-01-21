@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
+import android.graphics.Typeface;
 import android.graphics.drawable.BitmapDrawable;
 import android.graphics.drawable.Drawable;
 import android.net.Uri;
@@ -15,6 +17,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageSwitcher;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,6 +51,7 @@ public class PinMoment extends AppCompatActivity {
     static final int REQUEST_TAKE_PHOTO = 1;
     static final int REQUEST_VIDEO_CAPTURE = 2;
     Initializer initializer;
+    public Typeface opensemi;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +64,8 @@ public class PinMoment extends AppCompatActivity {
 
         setContentView(R.layout.activity_pin_moment);
 
-        Button reactionButton = (Button) findViewById(R.id.photobutton);
-        reactionButton.setOnClickListener(new Button.OnClickListener() {
-            public void onClick(View v) {
-                dispatchTakePictureIntent();
-            }
-        });
+        opensemi = Typeface.createFromAsset(getAssets(),
+                "OpenSans-Semibold.ttf");
 
         Button videoButton = (Button) findViewById(R.id.videobutton);
         videoButton.setOnClickListener(new Button.OnClickListener() {
@@ -80,18 +80,48 @@ public class PinMoment extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 setNextImage();
+                resetLike();
             }
         });
 
-        /*Bitmap bitmap = decodeSampledBitmapFromResource(this.getResources(),R.drawable.map_pin,5,60);
-        pictureMap.add(bitmap);
-        bitmap = decodeSampledBitmapFromResource(this.getResources(),R.drawable.enter_bg,5,60);
-        pictureMap.add(bitmap);
-        bitmap = decodeSampledBitmapFromResource(this.getResources(),R.drawable.adidas_moments,5,60);
-        pictureMap.add(bitmap);*/
+        ImageView view = (ImageView) findViewById(R.id.soccerball);
+        Bitmap icon = decodeSampledBitmapFromResource(this.getResources(),R.drawable.ball,75, 75);
+        view.setImageBitmap(icon);
+
+        ImageView likebutton = (ImageView) findViewById(R.id.likebutton);
+        Bitmap icon2 = decodeSampledBitmapFromResource(this.getResources(),R.drawable.likebutton01,50, 50);
+        likebutton.setImageBitmap(icon2);
+
+        TextView addreaction = (TextView) findViewById(R.id.addreaction);
+        addreaction.setTypeface(opensemi);
+
+        final Context cont = this;
+
+        addreaction.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                dispatchTakePictureIntent();
+            }
+        });
+
+        likebutton.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View view) {
+                ImageView like = (ImageView) findViewById(R.id.likebutton);
+                Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(), R.drawable.likebutton02,50,50);
+                like.setImageBitmap(icon);
+            }
+        });
+
         getImages();
 
         setNextImage();
+    }
+
+    private void resetLike(){
+        ImageView like = (ImageView) findViewById(R.id.likebutton);
+        Bitmap icon = decodeSampledBitmapFromResource(this.getResources(), R.drawable.likebutton01,50,50);
+        like.setImageBitmap(icon);
     }
 
     private void dispatchTakePictureIntent() {
