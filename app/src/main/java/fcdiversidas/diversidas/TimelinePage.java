@@ -88,6 +88,9 @@ public class TimelinePage extends AppCompatActivity {
         receivePins();
 
         TextView matchinfo = (TextView) findViewById(R.id.matchinfo);
+        TextView halftime = (TextView) findViewById(R.id.halftime);
+
+        halftime.setTypeface(texgyBold);
         matchinfo.bringToFront();
         matchinfo.setTypeface(texgyBold);
     }
@@ -163,9 +166,10 @@ public class TimelinePage extends AppCompatActivity {
                 int id = R.drawable.first_goal;
                 if (!(pin.type == null) && pin.type.equals("goal")) id = R.drawable.first_goal;
                 else if (!(pin.type == null) && pin.type.equals("card")) id = R.drawable.cardpin;
-                Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(),id,width, height);
-               //Bitmap newBit = Bitmap.createScaledBitmap(
-                 //       icon, 150, 50, false);
+                //Bitmap icon = decodeSampledBitmapFromResource(cont.getResources(),id,width, height);
+                Bitmap ic = BitmapFactory.decodeResource(cont.getResources(), id);
+                Bitmap icon = Bitmap.createScaledBitmap(ic, 414, 200, false);
+
                 ImageView imgV = (ImageView) findViewById(R.id.topbackground);
                 ib.setImageBitmap(icon);
                 double percentage = ((int) pin.timestamp)/95.;

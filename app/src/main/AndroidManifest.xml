@@ -36,8 +36,9 @@
                 android:resource="@xml/file_paths" />
         </provider>
 
-        <activity android:name=".PinMoment"></activity>
-        <activity android:name=".MatchPage"></activity>
+        <activity android:name=".PinMoment" />
+        <activity android:name=".MatchPage" />
+        <activity android:name=".LeagueActivity"></activity>
     </application>
 
 </manifest>

@@ -8,10 +8,10 @@
     android:background="@drawable/bg_timelinelive_min">
 
     <ImageView
-        android:layout_width="320dp"
-        android:layout_height="350dp"
+        android:layout_width="350dp"
+        android:layout_height="385dp"
         android:id="@+id/imageview"
-        android:layout_marginTop="130dp"
+        android:layout_marginTop="90dp"
         android:layout_centerHorizontal="true"
         />
 
@@ -89,16 +89,6 @@
         android:text="+add reaction"
         android:layout_marginRight="10dp"
         android:layout_marginTop= "22dp"
-        />
-
-    <Button
-        android:id="@+id/videobutton"
-        android:layout_width="wrap_content"
-        android:layout_height="40dp"
-        android:text="Take video"
-        android:layout_below="@+id/topbackground"
-        android:layout_alignParentRight="true"
-        android:layout_centerHorizontal="true"
         />
 
 </RelativeLayout>

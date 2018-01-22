@@ -54,12 +54,13 @@ public class PinMoment extends AppCompatActivity {
     static final int REQUEST_VIDEO_CAPTURE = 2;
     Initializer initializer;
     public Typeface opensemi;
+    boolean cycle;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         Intent intent = getIntent();
-
+        cycle = true;
         pinID = intent.getStringExtra("pinID");
         mins = intent.getStringExtra("time");
 
@@ -71,12 +72,12 @@ public class PinMoment extends AppCompatActivity {
         opensemi = Typeface.createFromAsset(getAssets(),
                 "OpenSans-Semibold.ttf");
 
-        Button videoButton = (Button) findViewById(R.id.videobutton);
+        /*Button videoButton = (Button) findViewById(R.id.videobutton);
         videoButton.setOnClickListener(new Button.OnClickListener() {
             public void onClick(View v) {
                 dispatchTakeVideoIntent();
             }
-        });
+        });*/
 
         ImageView backbutton = (ImageView) findViewById(R.id.backbutton);
         backbutton.bringToFront();
@@ -289,11 +290,14 @@ public class PinMoment extends AppCompatActivity {
                                 with(cont).
                                 asBitmap().
                                 load(urls).
-                                into(new CustomTarget<Bitmap>(100,100)  {
+                                into(new CustomTarget<Bitmap>(200,200)  {
                                     @Override
                                     public void onResourceReady (Bitmap res, Transition< ? super Bitmap > transition) {
                                         pictureMap.add(res);
-                                        setNextImage();
+                                        if (cycle) {
+                                            setNextImage();
+                                            cycle = false;
+                                        }
                                     }
                                 });
                     } catch (Exception e){

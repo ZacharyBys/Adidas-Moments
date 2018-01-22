@@ -25,7 +25,7 @@ public class MatchPage extends AppCompatActivity {
         backbutton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(MatchPage.this, HomePage.class);
+                Intent intent = new Intent(MatchPage.this, LeagueActivity.class);
                 startActivity(intent);
             }
         });
