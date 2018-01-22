@@ -57,6 +57,8 @@ public class TimelinePage extends AppCompatActivity {
     WebSocketHelper webSocketHelper;
     ArrayList<TimelinePin> pinArray;
     public Typeface texgyBold;
+    boolean pressedMoment;
+    boolean toggleVid = true;
 
 
 
@@ -68,7 +70,7 @@ public class TimelinePage extends AppCompatActivity {
 
         texgyBold = Typeface.createFromAsset(getAssets(),
                 "texgyreadventor-bold.otf");
-
+        pressedMoment = true;
         initializer = new Initializer();
         webSocketHelper = new WebSocketHelper();
         pinArray = new ArrayList<TimelinePin>();
@@ -80,6 +82,35 @@ public class TimelinePage extends AppCompatActivity {
             public void onClick(View view) {
                 Intent intent = new Intent(TimelinePage.this, MatchPage.class);
                 startActivity(intent);
+            }
+        });
+
+        Button highlightbutton = (Button) findViewById(R.id.highlightbutton);
+        highlightbutton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                if (pressedMoment) {
+                    ImageView img = (ImageView) findViewById(R.id.highlight);
+                    img.setVisibility(View.VISIBLE);
+                    img.bringToFront();
+                    pressedMoment = false;
+                    return;
+                }
+
+                VideoView videoview = (VideoView) findViewById(R.id.highlightvideo);
+
+                if (toggleVid) {
+                    videoview.setVisibility(View.VISIBLE);
+                    videoview.bringToFront();
+                    String path = "android.resource://" + getPackageName() + "/" + R.raw.zachvideo;
+                    videoview.setVideoURI(Uri.parse(path));
+                    videoview.start();
+                    toggleVid = false;
+                } else {
+                    videoview.stopPlayback();
+                    videoview.setVisibility(View.GONE);
+                    toggleVid = true;
+                }
             }
         });
 
