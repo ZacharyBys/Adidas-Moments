@@ -244,16 +244,18 @@ public class PinMoment extends AppCompatActivity {
         if (pictureMap.size() == 0){
             return;
         }
-        if (currentSlide == pictureMap.size()){
-            videoview.setVisibility(View.VISIBLE);
-            ImageView view = (ImageView) findViewById(R.id.imageview);
-            view.setVisibility(View.INVISIBLE);
-            String path = "android.resource://" + getPackageName() + "/" + R.raw.zachvideo;
-            videoview.setVideoURI(Uri.parse(path));
-            videoview.start();
-            currentSlide=0;
-            return;
-        }
+
+            if (currentSlide == pictureMap.size()) {
+                videoview.setVisibility(View.VISIBLE);
+                ImageView view = (ImageView) findViewById(R.id.imageview);
+                view.setVisibility(View.INVISIBLE);
+                String path = "android.resource://" + getPackageName() + "/" + R.raw.zachvideo;
+                videoview.setVideoURI(Uri.parse(path));
+                videoview.start();
+                currentSlide = 0;
+                return;
+            }
+
         ImageView view = (ImageView) findViewById(R.id.imageview);
         view.setImageBitmap(pictureMap.get(currentSlide));
         view.setVisibility(View.VISIBLE);

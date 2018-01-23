@@ -69,7 +69,7 @@ public class TimelinePage extends AppCompatActivity {
         setContentView(R.layout.activity_timeline_page);
 
         texgyBold = Typeface.createFromAsset(getAssets(),
-                "texgyreadventor-bold.otf");
+                "OpenSans-Semibold.ttf");
         pressedMoment = true;
         initializer = new Initializer();
         webSocketHelper = new WebSocketHelper();
@@ -102,7 +102,7 @@ public class TimelinePage extends AppCompatActivity {
                 if (toggleVid) {
                     videoview.setVisibility(View.VISIBLE);
                     videoview.bringToFront();
-                    String path = "android.resource://" + getPackageName() + "/" + R.raw.zachvideo;
+                    String path = "android.resource://" + getPackageName() + "/" + R.raw.moments;
                     videoview.setVideoURI(Uri.parse(path));
                     videoview.start();
                     toggleVid = false;
